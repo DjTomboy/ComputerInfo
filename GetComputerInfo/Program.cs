@@ -4,6 +4,8 @@ using System.Text;
 StringBuilder computerInfo = new();
 StringBuilder errorCollector = new();
 
+Console.WriteLine("Adatok lekérése folyamatban...");
+
 //Számítógép név
 computerInfo.AppendLine($"Számítógép név:\t\t{Environment.MachineName}");
 
@@ -78,6 +80,20 @@ catch (Exception ex)
     errorCollector.AppendLine($"Hiba történt az operációs rendszer adatok meghatározása közben: {ex.Message}");
 }
 
+//Printer
+try
+{
+    using var searcher = new ManagementObjectSearcher(@"root\cimv2", "SELECT * FROM Win32_Printer");
+    foreach (var obj in searcher.Get())
+    {
+        computerInfo.AppendLine($"Nyomtató:\t\t{obj["Name"]}");
+    }
+}
+catch (Exception ex)
+{
+    errorCollector.AppendLine($"Hiba történt a nyomtatók meghatározása közben: {ex.Message}");
+}
+
 //fájlba írás
 try
 {
@@ -88,6 +104,7 @@ catch (Exception ex)
     errorCollector.AppendLine($"Hiba történt az adatok fájlba írása közben: {ex.Message}");
 }
 
+Console.Clear();
 Console.WriteLine(computerInfo.ToString());
 
 if (errorCollector.Length > 0)
