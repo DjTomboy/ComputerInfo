@@ -1,4 +1,4 @@
-﻿using ComputerInfo.Models;
+using ComputerInfo.Models;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Text;
