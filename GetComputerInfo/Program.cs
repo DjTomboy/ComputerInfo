@@ -48,18 +48,45 @@ catch (Exception ex)
 //Disk
 try
 {
-    using var searcher = new ManagementObjectSearcher(@"ROOT\Microsoft\Windows\Storage", "SELECT * FROM MSFT_PhysicalDisk");
-    foreach (var obj in searcher.Get())
+    switch (OS.GetWindowsVersion())
     {
-        string mediaType = Convert.ToInt32(obj["MediaType"]) switch
-        {
-            3 => "HDD",
-            4 => "SSD",
-            _ => "Ismeretlen",
-        };
-        ulong capacityInGB = Convert.ToUInt64(obj["Size"]) / 1073741824;
-        computerInfo.AppendLine($"{mediaType}:\t\t\t{capacityInGB} GB\t ({obj["Model"]})\t");
+        case OS.WindowsVersion.Desktop_Vista:
+        case OS.WindowsVersion.Desktop_7:
+        case OS.WindowsVersion.Server_2008:
+        case OS.WindowsVersion.Server_2008R2:
+            using (var searcher = new ManagementObjectSearcher(@"root\cimv2", "SELECT * FROM Win32_DiskDrive"))
+                foreach (var obj in searcher.Get())
+                {                    
+                    ulong capacityInGB = Convert.ToUInt64(obj["Size"]) / 1073741824;
+                    computerInfo.AppendLine($"DISK:\t\t\t{capacityInGB} GB\t ({obj["Model"]})\t");
+                }
+            errorCollector.AppendLine("Figyelmeztetés! Windows Vista, Windows 7, Windows Server 2008 és Windows Server 2008R2 operációs rendszerek esetén nem lehet megállapítani a DISK-ek típusát (HDD vagy SSD)");
+            break;
+        case OS.WindowsVersion.Desktop_8:
+        case OS.WindowsVersion.Desktop_8_1:
+        case OS.WindowsVersion.Desktop_10:
+        case OS.WindowsVersion.Desktop_11:
+        case OS.WindowsVersion.Server_2012:
+        case OS.WindowsVersion.Server_2012R2:
+        case OS.WindowsVersion.Server_2016:
+        case OS.WindowsVersion.Server_2019:
+        case OS.WindowsVersion.Server_2022:
+            using (var searcher = new ManagementObjectSearcher(@"ROOT\Microsoft\Windows\Storage", "SELECT * FROM MSFT_PhysicalDisk"))
+                foreach (var obj in searcher.Get())
+                {
+                    string mediaType = Convert.ToInt32(obj["MediaType"]) switch
+                    {
+                        3 => "HDD",
+                        4 => "SSD",
+                        _ => "Ismeretlen",
+                    };
+                    ulong capacityInGB = Convert.ToUInt64(obj["Size"]) / 1073741824;
+                    computerInfo.AppendLine($"{mediaType}:\t\t\t{capacityInGB} GB\t ({obj["Model"]})\t");
+                }
+            break;
     }
+
+
 }
 catch (Exception ex)
 {

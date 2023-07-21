@@ -1,3 +1,4 @@
 ﻿v1.1.0 (2023.07.xx.)
 - Számítógépre telepített nyomtatókat is lekéri a program.
 - Internet sebességet is leméri a program (csak 64 bites Windows esetén).
+- A program működik régebbi operációs rendszereken is. Minimum Windows verzió: 7, Server 2008.
