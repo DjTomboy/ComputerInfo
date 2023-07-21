@@ -1,4 +1,5 @@
-﻿using System.Management;
+﻿using ComputerInfo;
+using System.Management;
 using System.Text;
 
 StringBuilder computerInfo = new();
@@ -92,6 +93,34 @@ try
 catch (Exception ex)
 {
     errorCollector.AppendLine($"Hiba történt a nyomtatók meghatározása közben: {ex.Message}");
+}
+
+//Internet speedtest -- csak 64 bites rendszeren
+if (Environment.Is64BitOperatingSystem)
+{
+    Console.Clear();
+    Console.WriteLine("Internet sebességmérés folyamatban...");
+    var (speedtestResult, exception) = Operations.Speedtest();
+    if (speedtestResult is null)
+    {
+        errorCollector.AppendLine($"Hiba történt internet sebességmérés közben! {exception?.Message}");
+    }
+    else
+    {
+        computerInfo.AppendLine();
+        computerInfo.AppendLine("Internet sebességmérés adatok:");
+        computerInfo.AppendLine($"Ping (tétlen):\t\t\t{speedtestResult.Ping?.GetLatencyString()}");
+        computerInfo.AppendLine($"Ping (letöltés):\t\t{speedtestResult.Download?.Latency?.GetIqmString()}");
+        computerInfo.AppendLine($"Ping (feltöltés):\t\t{speedtestResult.Upload?.Latency?.GetIqmString()}");
+        computerInfo.AppendLine($"Letöltési sebesség:\t\t{speedtestResult.Download?.GetBandwidthInMbps()}");
+        computerInfo.AppendLine($"Feltöltési sebesség:\t\t{speedtestResult.Upload?.GetBandwidthInMbps()}");
+        computerInfo.AppendLine($"Internet szolgáltató\t\t{speedtestResult.Isp}");
+        computerInfo.AppendLine($"Eredmény URL:\t\t\t{speedtestResult.Result?.Url}");
+    }
+}
+else
+{
+    errorCollector.AppendLine("Internet sebesség mérése csak 64 bites operációs rendszeren lehetséges!");
 }
 
 //fájlba írás
