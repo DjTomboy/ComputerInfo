@@ -13,7 +13,7 @@ namespace ComputerInfo
             ProcessStartInfo startInfo = new()
             {
                 FileName = speedtestExePath,
-                Arguments = "-f json --accept-license",
+                Arguments = "-f json --accept-license --accept-gdpr",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
