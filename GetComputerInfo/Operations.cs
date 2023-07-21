@@ -1,4 +1,4 @@
-﻿using ComputerInfo.Models;
+using ComputerInfo.Models;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Text;
@@ -13,7 +13,7 @@ namespace ComputerInfo
             ProcessStartInfo startInfo = new()
             {
                 FileName = speedtestExePath,
-                Arguments = "-f json",
+                Arguments = "-f json --accept-license",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
