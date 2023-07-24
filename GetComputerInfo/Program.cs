@@ -56,7 +56,7 @@ try
         case OS.WindowsVersion.Server_2008R2:
             using (var searcher = new ManagementObjectSearcher(@"root\cimv2", "SELECT * FROM Win32_DiskDrive"))
                 foreach (var obj in searcher.Get())
-                {                    
+                {
                     ulong capacityInGB = Convert.ToUInt64(obj["Size"]) / 1073741824;
                     computerInfo.AppendLine($"DISK:\t\t\t{capacityInGB} GB\t ({obj["Model"]})\t");
                 }
@@ -84,9 +84,10 @@ try
                     computerInfo.AppendLine($"{mediaType}:\t\t\t{capacityInGB} GB\t ({obj["Model"]})\t");
                 }
             break;
+        case OS.WindowsVersion.Other:
+            errorCollector.AppendLine($"DISK adatok meghatározása nem lehetséges, nem támogatott operációs rendszer verzió!");
+            break;
     }
-
-
 }
 catch (Exception ex)
 {
