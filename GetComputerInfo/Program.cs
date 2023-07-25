@@ -126,7 +126,13 @@ catch (Exception ex)
 //Internet speedtest -- csak 64 bites rendszeren
 if (Environment.Is64BitOperatingSystem)
 {
-    Console.Clear();
+    try
+    {
+        Console.Clear();
+    }
+    catch
+    { 
+    }
     Console.WriteLine("Internet sebességmérés folyamatban...");
     var (speedtestResult, exception) = Operations.Speedtest();
     if (speedtestResult is null)
@@ -161,7 +167,13 @@ catch (Exception ex)
     errorCollector.AppendLine($"Hiba történt az adatok fájlba írása közben: {ex.Message}");
 }
 
-Console.Clear();
+try 
+{ 
+    Console.Clear(); 
+} 
+catch
+{ 
+}
 Console.WriteLine(computerInfo.ToString());
 
 if (errorCollector.Length > 0)
