@@ -134,7 +134,9 @@ if (Environment.Is64BitOperatingSystem)
     { 
     }
     Console.WriteLine("Internet sebességmérés folyamatban...");
+    AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
     var (speedtestResult, exception) = Operations.Speedtest();
+    AppDomain.CurrentDomain.ProcessExit -= CurrentDomain_ProcessExit;
     if (speedtestResult is null)
     {
         errorCollector.AppendLine($"Hiba történt internet sebességmérés közben! {exception?.Message}");
@@ -156,6 +158,7 @@ else
 {
     errorCollector.AppendLine("Internet sebesség mérése csak 64 bites operációs rendszeren lehetséges!");
 }
+
 
 //fájlba írás
 try
@@ -184,3 +187,8 @@ if (errorCollector.Length > 0)
 }
 
 Console.ReadLine();
+
+static void CurrentDomain_ProcessExit(object? sender, EventArgs e)
+{
+    Operations.StopSpeedtest();
+}

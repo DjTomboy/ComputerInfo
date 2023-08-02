@@ -2,6 +2,7 @@ using ComputerInfo.Models;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ComputerInfo
 {
@@ -50,6 +51,31 @@ namespace ComputerInfo
         internal static double ConvertBytesToMBits (int bytes)
         {
             return Math.Round(Convert.ToDouble(bytes) / 125000, 2);
+        }
+
+        internal static void StopSpeedtest()
+        {
+            ProcessStartInfo startInfo = new()
+            {
+                FileName = "powershell.exe",
+                Arguments = "-NoProfile -ExecutionPolicy Bypass -Command Stop-Process -Name \"speedtest\"",
+                UseShellExecute = false,                
+                CreateNoWindow = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                StandardOutputEncoding = Encoding.UTF8,
+                StandardErrorEncoding = Encoding.UTF8,
+            };
+
+            try
+            {
+                using var process = Process.Start(startInfo);
+
+                process?.Start();                
+            }
+            catch (Exception ex)
+            {                
+            }
         }
     }
 }
