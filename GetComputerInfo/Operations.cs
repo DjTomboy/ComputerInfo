@@ -70,10 +70,8 @@ namespace ComputerInfo
             try
             {
                 using var process = Process.Start(startInfo);
-
-                process?.Start();                
             }
-            catch (Exception ex)
+            catch
             {                
             }
         }
