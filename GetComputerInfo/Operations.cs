@@ -1,13 +1,15 @@
 using ComputerInfo.Models;
 using Newtonsoft.Json;
+using SegedNet7;
 using System.Diagnostics;
 using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ComputerInfo
 {
     internal static class Operations
     {
+        static AppUpdate.RunModes runMode;
+
         internal static (SpeedtestModel? speedtestResult, Exception? errorMessage) Speedtest()
         {
             string speedtestExePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Utils", "speedtest.exe");
@@ -75,6 +77,34 @@ namespace ComputerInfo
             }
             catch (Exception ex)
             {                
+            }
+        }
+
+        internal static bool CheckForUpdate()
+        {
+            runMode = Environment.Is64BitProcess
+                ? AppUpdate.RunModes.ComputerInfo_x64
+                : AppUpdate.RunModes.ComputerInfo;
+            Version currentVersion = AppUpdate.GetCurrentVersion(runMode);
+            Version latestVersion = AppUpdate.GetLatestVersion(runMode).Result;
+
+            return latestVersion != new Version("0.0.0.0")
+                && currentVersion != new Version("0.0.0.0")
+                && currentVersion.CompareTo(latestVersion) < 0;
+        }
+
+        internal static void StartUpdate()
+        {
+            string appUpdaterExePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                                        Environment.Is64BitOperatingSystem ? "AppUpdater_x64.exe" : "AppUpdater.exe");
+            if (File.Exists(appUpdaterExePath))
+            {
+                using Process p = Process.Start(appUpdaterExePath, $"/{runMode}");
+                p.WaitForExit();
+            }
+            else
+            {
+                Program.errorCollector.AppendLine($"Hiba történt programfrissítés indítása közben, nem létezik a AppUpdater program! ({appUpdaterExePath})");
             }
         }
     }

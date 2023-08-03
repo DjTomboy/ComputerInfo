@@ -30,6 +30,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="SegedNet7">
+      <HintPath>..\..\SegedNet7\SegedNet7\bin\publish\SegedNet7.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="changelog.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

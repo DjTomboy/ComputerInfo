@@ -1,5 +1,9 @@
-﻿V1.1.2 (2023.07.25.)
-- Módosítás a hibakezetlésben.
+﻿v1.2.0 (2023.08.xx.)
+- AppUpdater beépítése: a program indításkor ellenőrzi, hogy elérhető-e belőle újabb verzió, ha igen, akkor felajánlja a frissítést (telepített .NET Framework v4.8 szükséges).
+- Javítás: internet sebességmérés közbeni program megszakításnál a háttérben tovább futott a sebességmérés.
+
+v1.1.2 (2023.07.25.)
+- Módosítás a hibakezelésben.
 
 v1.1.1 (2023.07.24.)
 - Javítás: DISK adatok lekérdezése.
